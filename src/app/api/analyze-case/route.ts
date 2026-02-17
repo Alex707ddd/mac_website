@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { intakeSchema } from "@/lib/validations/intake-schema"
-import { generateSystemPrompt, generateUserPrompt } from "@/lib/ai/prompt-generator"
+// import { generateSystemPrompt, generateUserPrompt } from "@/lib/ai/prompt-generator"
+import { sendCaseBrief } from "@/lib/email/service"
 
 export async function POST(req: Request) {
     try {
@@ -32,8 +33,13 @@ export async function POST(req: Request) {
         // Simulate delay
         await new Promise(resolve => setTimeout(resolve, 1500))
 
+        // Send Email
+        // Target Email: alex387jj@gmail.com
+        await sendCaseBrief("alex387jj@gmail.com", body.name, mockSummary)
+
         return NextResponse.json({ summary: mockSummary })
     } catch (error) {
+        console.error("API Error:", error)
         return NextResponse.json(
             { error: "Invalid request data" },
             { status: 400 }
